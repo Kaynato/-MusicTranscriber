@@ -1,6 +1,8 @@
 package net.suizinshu;
 
 import java.io.File;
+import java.io.IOError;
+import java.io.IOException;
 
 import javax.sound.midi.*;
 
@@ -10,11 +12,17 @@ public class MidiDiagnoser {
     public static final int NOTE_OFF = 0x80;
     public static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 
-    public static void main(String[] args) throws Exception {
-        
-    	File midiFile = new File("D:/Users/Brian/Music/pianomidi/chopin/chpn-p7.mid");
+    public static void diagnose(String inName) {
+		File midiFile = new File(inName);
     	
-    	Sequence sequence = MidiSystem.getSequence(midiFile);
+    	Sequence sequence = null;
+		try {
+			sequence = MidiSystem.getSequence(midiFile);
+		} catch (InvalidMidiDataException e) {
+			System.err.println("Midi data invalid!");
+		} catch (IOException e) {
+			throw new IOError(null);
+		}
 
         int trackNumber = 0;
         for (Track track :  sequence.getTracks()) {
@@ -52,6 +60,6 @@ public class MidiDiagnoser {
 
             System.out.println();
         }
-    }
+	}
 
 }

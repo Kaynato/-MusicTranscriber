@@ -20,7 +20,6 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
  * 
  * 		And separated by a \n.
  * 
- * 
  * @author Zicheng Gao
  *
  */
@@ -36,22 +35,57 @@ public class MidiParser {
 	 * Convert a directory. Output also.
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void midiDirToNumDir(String inName, String outName) {
+		// Directory to convert
+		File inputDir = new File(inName);
+		List<File> midiFiles = feedInputDir(inputDir);	
+		String outputDirPath = prepOutputGetPath(outName);
+		long startTime = System.nanoTime();
+		
+		for (File midiFile : midiFiles) {
+			StringBuilder outSB = new StringBuilder(outputDirPath + '\\' + midiFile.getName());
+			outSB.delete(outSB.lastIndexOf("."), outSB.length());
+			outSB.append(".txt");
 
-		if (args.length <= 0) {
-			System.out.println("Please give input: \n"
-					+ "\tIN_DIRECTORY OUT_DIRECTORY\n"
-					+ "Where IN_DIRECTORY contains .midi files to be converted into txt and put"
-					+ " into the OUT_DIRECTORY.");
-			return;
+			convertSingleMidiToNum(midiFile, new File(outSB.toString()));
 		}
 
-		if (args.length >= 3)
-			debug = true;
+		double secondsTaken = (System.nanoTime() - startTime) / 1_000_000_000;
 
-		// Directory to convert
-		File inputDir = new File(args[0]);
+		System.out.println("Finished! Processed " + midiFiles.size() + " files in " + secondsTaken + " seconds.");
+	}
 
+	private static void convertSingleMidiToNum(File midiFile, File outFile) {
+		try {
+			OutputStreamWriter outWriter = new OutputStreamWriter(new FileOutputStream(outFile));
+
+			List<NoteEvent> noteList = parseMidi(midiFile);
+
+			outWriter.write(noteList.get(0).toString());
+
+			for (int i = 1; i < noteList.size() - 1; i++)
+				outWriter.write('\n' + noteList.get(i).toString());
+			
+			outWriter.close();
+		} catch (FileNotFoundException e) {
+			System.err.println("Output file was not automatically created!?");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static String prepOutputGetPath(String outName) {
+		// Prepare output directory
+		File outputDir = new File(outName);
+
+		if (!outputDir.exists())
+			outputDir.mkdirs();
+
+		String outputDirPath = outputDir.getAbsolutePath();
+		return outputDirPath;
+	}
+
+	private static List<File> feedInputDir(File inputDir) {
 		// Filelist initialization
 		List<File> midiFiles;
 
@@ -59,67 +93,16 @@ public class MidiParser {
 		if (inputDir.isDirectory())
 			midiFiles = (List<File>) FileUtils.listFiles(inputDir, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 		else {
-			System.err.println("Not a valid directory!");
-			return;
+			throw new IllegalAccessError("Not a valid directory!");
 		}
 
 		if (midiFiles.size() == 0) {
-			System.err.println("Directory is empty!");
-			return;
-		}	
-
-		// Prepare output directory
-		File outputDir = new File(args[1]);
-
-		if (!outputDir.exists())
-			outputDir.mkdirs();
-
-		String outputDirPath = outputDir.getAbsolutePath();
-
-		long startTime = System.nanoTime();
-
-		for (File midiFile : midiFiles) {
-			StringBuilder outSB = new StringBuilder(outputDirPath + '\\' + midiFile.getName());
-			outSB.delete(outSB.lastIndexOf("."), outSB.length());
-			outSB.append(".txt");
-
-			String outFileName = outSB.toString();
-
-			File outFile = new File(outFileName);
-
-			try {
-				OutputStreamWriter outWriter = new OutputStreamWriter(new FileOutputStream(outFile));
-
-				List<NoteEvent> trebleList = parseMidi(midiFile, 1);
-				List<NoteEvent> bassList = parseMidi(midiFile, 2);
-
-				System.out.println(bassList);
-
-				outWriter.write(trebleList.get(0).toString());
-
-				for (int i = 1; i < trebleList.size() - 1; i++) {
-					outWriter.write('\n' + trebleList.get(i).toString());
-				}
-
-
-				outWriter.close();
-			} catch (FileNotFoundException e) {
-				System.err.println("Output file was not automatically created!?");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
+			throw new IllegalAccessError("Input directory is empty!");
 		}
-
-		long endTime = System.nanoTime();
-		double durationInNanoSecs = (endTime - startTime);
-		double secondsTaken = durationInNanoSecs / 1_000_000_000;
-
-		System.out.println("Finished! Processed " + midiFiles.size() + " files in " + secondsTaken + " seconds.");
-
+		return midiFiles;
 	}
 
-	private static List<NoteEvent> parseMidi(File midiFile, int trackNum) {
+	private static List<NoteEvent> parseMidi(File midiFile) {
 
 		/**
 		 * Relative time, absolute note

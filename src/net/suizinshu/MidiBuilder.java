@@ -11,41 +11,47 @@ import javax.sound.midi.*;
 
 public class MidiBuilder {
 
-	public static void main(String args[]) throws FileNotFoundException {
-
-		if (args.length <= 0)
-			args = new String[]{"D:/Cloud/Dropbox/College/CWRU/Hackathon/midiRNN/chopin_txt/chpn-p7.txt"};
-			
-		File textFile = new File(args[0]);
+	// MIDI's own internal handling codes
+	private static final int NOTE_ON = 0x90;
+	private static final int NOTE_OFF = 0x80;
+	
+	/**
+	 * Inputs: INFILE OUT
+	 * @param args
+	 * @throws FileNotFoundException
+	 */
+	public static void numToMidi(String inName, String outName, String tempoStr) throws FileNotFoundException {
+		File textFile = new File(inName);
+		File midiFile = new File(outName);
+		int tempo = Integer.parseInt(tempoStr);
 		
 		if (!textFile.exists())
-			throw new FileNotFoundException("File not found or is invalid!");
-			
+			throw new FileNotFoundException("Text file not found or is invalid!");
 		
-		buildMidi(textFile);
-
+		buildMidi(textFile, midiFile, tempo);
 	}
 
-	private static void buildMidi(File textFile) {
+	private static void buildMidi(File textFile, File midiFile, int tempo) {
 		try {
 	//****  Create a new MIDI sequence with 24 ticks per beat  ****
-			Sequence s = new Sequence(Sequence.PPQ,24);
+			Sequence s = new Sequence(Sequence.PPQ,tempo);
 
 	//****  Obtain a MIDI track from the sequence  ****
 			Track t = s.createTrack();
-
-			MidiEvent me;
-			ShortMessage mm;
+			
 			writeHeader(t);
 			
-			List<NoteEvent> noteEvents = new ArrayList<NoteEvent>();
+			// Intitialize reader
 			BufferedReader reader = new BufferedReader(new FileReader(textFile));
 			
+			// Initialize noteEvent list
+			List<NoteEvent> noteEvents = new ArrayList<NoteEvent>();
+			
+			// Parse all noteEvents
 			for (String line = reader.readLine(); line != null; line = reader.readLine())
 				noteEvents.add(new NoteEvent(line));
 			
-			System.out.println(noteEvents); // TODO
-			
+			// Determine activationTimes for each
 			long tick = 0;
 			for (int i = 0; i < noteEvents.size(); i++) {
 				NoteEvent e = noteEvents.get(i);
@@ -53,30 +59,42 @@ public class MidiBuilder {
 				e.activationTime = tick;
 			}
 			
-			noteEvents.forEach((ne) -> System.out.println(ne.activationTime));
-
-	//****  note on - middle C  ****
-			mm = new ShortMessage();
-			mm.setMessage(0x90,0x3C,0x60);
-			me = new MidiEvent(mm,(long)1);
-			t.add(me);
-
-	//****  note off - middle C - 120 ticks later  ****
-			mm = new ShortMessage();
-			mm.setMessage(0x80,0x3C,0x40);
-			me = new MidiEvent(mm,(long)121);
-			t.add(me);
+			long endTime = tick;
+			int finalDuration = 0;
+			int endPadding = 10;
+			// Determine endTime
+			for (int i = noteEvents.size() - 1; i == noteEvents.size() - 1 || 
+					noteEvents.get(i+1).relativeTime == 0; i--)
+				finalDuration = Math.max(noteEvents.get(i).duration, finalDuration);
+			endTime += finalDuration + endPadding;
+			
+			noteEventIntoMIDIEvents(t, noteEvents);
 
 	//****  set end of track (meta event) 19 ticks later  ****
-			endTrack(t);
+			endTrack(t, endTime);
 
 	//****  write the MIDI sequence to a MIDI file  ****
-			File f = new File("midifile.mid");
-			MidiSystem.write(s,1,f);
+			MidiSystem.write(s,1,midiFile);
 			
 			reader.close();
 		} catch(Exception e) {
-			System.out.println("Exception caught " + e.toString());
+			e.printStackTrace();
+		}
+	}
+
+	private static void noteEventIntoMIDIEvents(Track t, List<NoteEvent> noteEvents)
+			throws InvalidMidiDataException {
+		ShortMessage mm;
+		MidiEvent me;
+		
+		// Create events and add in order
+		for (NoteEvent note : noteEvents) {
+			mm = new ShortMessage(NOTE_ON, note.key, note.velocity);
+			me = new MidiEvent(mm, note.activationTime);
+			t.add(me);
+			mm = new ShortMessage(NOTE_OFF, note.key, note.velocity);
+			me = new MidiEvent(mm, note.activationTime + note.duration);
+			t.add(me);
 		}
 	}
 
@@ -121,13 +139,13 @@ public class MidiBuilder {
 		t.add(me);
 	}
 
-	private static void endTrack(Track t) throws InvalidMidiDataException {
+	private static void endTrack(Track t, long endTime) throws InvalidMidiDataException {
 		MidiEvent me;
 		MetaMessage mt;
 		mt = new MetaMessage();
 		byte[] bet = {}; // empty array
 		mt.setMessage(0x2F,bet,0);
-		me = new MidiEvent(mt, (long)140);
+		me = new MidiEvent(mt, endTime);
 		t.add(me);
 	}
 
