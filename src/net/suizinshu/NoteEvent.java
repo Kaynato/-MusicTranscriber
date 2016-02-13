@@ -21,7 +21,7 @@ public final class NoteEvent {
 
 	@Override
 	public String toString() {
-		return (relativeTime + " " + key + " " + velocity + " " + duration);
+		return (relativeTime + "," + key + "," + velocity + "," + duration);
 	}
 	
 	public NoteEvent(String data) {
@@ -30,7 +30,7 @@ public final class NoteEvent {
 		
 		for (int i = 0; i < data.length() + 1; i++) {
 			
-			if (i < data.length() && data.charAt(i) != ' ')
+			if (i < data.length() && data.charAt(i) != ',')
 				num.append(data.charAt(i));
 			else {
 				int datum = Integer.parseInt(num.toString());

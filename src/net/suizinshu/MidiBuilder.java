@@ -1,7 +1,11 @@
 package net.suizinshu;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sound.midi.*;
 
@@ -9,6 +13,9 @@ public class MidiBuilder {
 
 	public static void main(String args[]) throws FileNotFoundException {
 
+		if (args.length <= 0)
+			args = new String[]{"D:/Cloud/Dropbox/College/CWRU/Hackathon/midiRNN/chopin_txt/chpn-p7.txt"};
+			
 		File textFile = new File(args[0]);
 		
 		if (!textFile.exists())
@@ -30,6 +37,23 @@ public class MidiBuilder {
 			MidiEvent me;
 			ShortMessage mm;
 			writeHeader(t);
+			
+			List<NoteEvent> noteEvents = new ArrayList<NoteEvent>();
+			BufferedReader reader = new BufferedReader(new FileReader(textFile));
+			
+			for (String line = reader.readLine(); line != null; line = reader.readLine())
+				noteEvents.add(new NoteEvent(line));
+			
+			System.out.println(noteEvents); // TODO
+			
+			long tick = 0;
+			for (int i = 0; i < noteEvents.size(); i++) {
+				NoteEvent e = noteEvents.get(i);
+				tick += e.relativeTime;
+				e.activationTime = tick;
+			}
+			
+			noteEvents.forEach((ne) -> System.out.println(ne.activationTime));
 
 	//****  note on - middle C  ****
 			mm = new ShortMessage();
@@ -50,6 +74,7 @@ public class MidiBuilder {
 			File f = new File("midifile.mid");
 			MidiSystem.write(s,1,f);
 			
+			reader.close();
 		} catch(Exception e) {
 			System.out.println("Exception caught " + e.toString());
 		}
