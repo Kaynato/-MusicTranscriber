@@ -30,7 +30,7 @@ public class MidiParser {
 	private static final int NOTE_ON = 0x90;
 	private static final int NOTE_OFF = 0x80;
 	
-	private static final boolean debug = true;
+	private static final boolean debug = false;
 
 	/**
 	 * Convert a directory. Output also.
@@ -39,10 +39,11 @@ public class MidiParser {
 	public static void main(String[] args) {
 
 		if (args.length <= 0) {
-			args = new String[2];
-			// TODO use actual things.
-			args[0] = "D:/Users/Brian/Music/pianomidi/tester";
-			args[1] = "D:/Cloud/Dropbox/College/CWRU/Hackathon/midiRNN/tester";
+			System.out.println("Please give input: \n"
+					+ "\tIN_DIRECTORY OUT_DIRECTORY\n"
+					+ "Where IN_DIRECTORY contains .midi files to be converted into txt and put"
+					+ " into the OUT_DIRECTORY.");
+			return;
 		}
 
 		// Directory to convert
@@ -72,6 +73,8 @@ public class MidiParser {
 
 		String outputDirPath = outputDir.getAbsolutePath();
 
+		long startTime = System.nanoTime();
+		
 		for (File midiFile : midiFiles) {
 			StringBuilder outSB = new StringBuilder(outputDirPath + '\\' + midiFile.getName());
 			outSB.delete(outSB.lastIndexOf("."), outSB.length());
@@ -81,6 +84,8 @@ public class MidiParser {
 			
 			File outFile = new File(outFileName);
 
+			
+			
 			try {
 				OutputStreamWriter outWriter = new OutputStreamWriter(new FileOutputStream(outFile));
 				
@@ -100,10 +105,14 @@ public class MidiParser {
 				e.printStackTrace();
 			}
 			
-			
-			
 		}
 
+		long endTime = System.nanoTime();
+		double durationInNanoSecs = (endTime - startTime);
+		double secondsTaken = durationInNanoSecs / 1_000_000_000;
+		
+		System.out.println("Finished! Processed " + midiFiles.size() + " files in " + secondsTaken + " seconds.");
+		
 	}
 
 	private static List<NoteEvent> parseMidi(File midiFile) {
@@ -197,28 +206,6 @@ public class MidiParser {
 //		System.out.println("Converted " + midiFile.getName());
 
 		return noteEvents;
-	}
-
-	private static final class NoteEvent {
-		public long activationTime;
-		public long relativeTime;
-		public int key;
-		public int velocity;
-		public int duration;
-
-		public NoteEvent(long activationTime, long relativeTime, int key, int velocity, int duration) {
-			this.activationTime = activationTime;
-			this.relativeTime = relativeTime;
-			this.key = key;
-			this.velocity = velocity;
-			this.duration = duration;
-		}
-
-		@Override
-		public String toString() {
-			return (relativeTime + " " + key + " " + velocity + " " + duration);
-		}
-
 	}
 
 }
