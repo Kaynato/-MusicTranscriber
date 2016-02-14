@@ -13,13 +13,18 @@ public class MidiNumConverter {
 			Scanner scanner = new Scanner(System.in);
 			System.out.println(
 					"============================\n" + 
-					"||   MIDI NUM CONVERTER   ||\n" +
-					"============================\n" +
+					"||   MIDI NUM CONVERTER   || - Absolute Key Edition\n" +
+					"============================ - \"Contemporary Piano Edition\"\n" +
+					"Zicheng Gao\n" +
+					"\n" +
+					"\t\tPrepares polyphonic midi into numeric CSV-like format \n" + 
+					"\t\tfor training character-based Recurrent Neural Networks.\n" +
 					"\n" +
 					"\t0: Diagnose MIDI\n" +
 					"\t1: MIDI Directory to TXT Directory\n" +
-					"\t2: TXT File to MIDI file" +
-					"\t3: TXT File to MIDI file (same filename same location different extension)\n"
+					"\t2: TXT File to MIDI file\n" +
+					"\t3: TXT File to MIDI file (same filename same location different extension)\n" +
+					"\t99: Exit."
 					);
 			String tmp;
 			switch (scanner.nextInt()) {
@@ -40,10 +45,18 @@ public class MidiNumConverter {
 					String targ = scanner.next();
 					System.out.println("Please input desired tempo:");
 					MidiBuilder.numToMidi(tmp, targ, scanner.next());
+					System.out.println("...Completed.");
 					break;
-//				case 3:
-//					
+				case 3:
+					System.out.println("Please input text file to convert:");
+					tmp = scanner.next();
+					StringBuilder sb = new StringBuilder(tmp);
+					sb.delete(sb.lastIndexOf("."), sb.length()).append(".mid");
+					System.out.println("Please input desired tempo:");
+					MidiBuilder.numToMidi(tmp, sb.toString(), scanner.next());
+					break;
 			}
+			System.out.println("\nHave a nice day!");
 			scanner.close();
 		}
 		
