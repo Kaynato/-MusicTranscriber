@@ -28,27 +28,28 @@ public final class NoteEvent {
 		int index = 0;
 		StringBuilder num = new StringBuilder();
 		
-		for (int i = 0; i < data.length() + 1; i++) {
+		for (int i = 0; i < data.length() + 1 && index < 4; i++) {
 			
 			if (i < data.length() && data.charAt(i) != ',')
-				num.append(data.charAt(i));
+					num.append(data.charAt(i));
 			else {
-				int datum = Integer.parseInt(num.toString());
-				
-				if (index == 0)
-					relativeTime = datum;
-				else if (index == 1)
-					key = datum;
-				else if (index == 2)
-					velocity = datum;
-				else if (index == 3)
-					duration = datum;
-				
-				num.delete(0, num.length());
-				index++;
+				if (num.length() > 0) {
+					int datum = Integer.parseInt(num.toString());
+
+					if (index == 0)
+						relativeTime = datum;
+					else if (index == 1)
+						key = datum;
+					else if (index == 2)
+						velocity = datum;
+					else if (index == 3)
+						duration = datum;
+
+					num.delete(0, num.length());
+					index++;
+				}
 			}
 		}
-		
 	}
 	
 }

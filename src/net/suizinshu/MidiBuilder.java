@@ -32,6 +32,8 @@ public class MidiBuilder {
 	}
 
 	private static void buildMidi(File textFile, File midiFile, int tempo) {
+		int skips = 0;
+		int lines = 0;
 		try {
 	//****  Create a new MIDI sequence with 24 ticks per beat  ****
 			Sequence s = new Sequence(Sequence.PPQ,tempo);
@@ -48,8 +50,13 @@ public class MidiBuilder {
 			List<NoteEvent> noteEvents = new ArrayList<NoteEvent>();
 			
 			// Parse all noteEvents
-			for (String line = reader.readLine(); line != null; line = reader.readLine())
-				noteEvents.add(new NoteEvent(line));
+			for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+				lines++;
+				if (line.length() > 6 && Character.isDigit(line.charAt(0)))
+					noteEvents.add(new NoteEvent(line));
+				else
+					skips++;
+			}
 			
 			// Determine activationTimes for each
 			long tick = 0;
@@ -64,8 +71,9 @@ public class MidiBuilder {
 			int endPadding = 10;
 			// Determine endTime
 			for (int i = noteEvents.size() - 1; i == noteEvents.size() - 1 || 
-					noteEvents.get(i+1).relativeTime == 0; i--)
+					noteEvents.get(i+1).relativeTime == 0; i--) {
 				finalDuration = Math.max(noteEvents.get(i).duration, finalDuration);
+			}
 			endTime += finalDuration + endPadding;
 			
 			noteEventIntoMIDIEvents(t, noteEvents);
@@ -77,7 +85,11 @@ public class MidiBuilder {
 			MidiSystem.write(s,1,midiFile);
 			
 			reader.close();
+			
+			System.out.println(skips + " out of " + lines + " lines were malformed, being " + 
+					   ((double)(100 * skips))/((double)lines) + "%.");
 		} catch(Exception e) {
+			System.err.println("Exception while processing line " + lines);
 			e.printStackTrace();
 		}
 	}
@@ -87,8 +99,20 @@ public class MidiBuilder {
 		ShortMessage mm;
 		MidiEvent me;
 		
+		
 		// Create events and add in order
 		for (NoteEvent note : noteEvents) {
+
+			while (note.key < 0)
+				note.key += 32;
+			if (note.key > 127)
+				note.key %= 128;
+			
+			while (note.velocity < 0)
+				note.velocity += 50;
+			if (note.velocity > 100)
+				note.velocity %= 100;
+			
 			mm = new ShortMessage(NOTE_ON, note.key, note.velocity);
 			me = new MidiEvent(mm, note.activationTime);
 			t.add(me);
