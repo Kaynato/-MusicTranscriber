@@ -18,7 +18,8 @@ public class MidiNumConverter {
 					"\n" +
 					"\t0: Diagnose MIDI\n" +
 					"\t1: MIDI Directory to TXT Directory\n" +
-					"\t2: TXT File to MIDI file"
+					"\t2: TXT File to MIDI file" +
+					"\t3: TXT File to MIDI file (same filename same location different extension)\n"
 					);
 			String tmp;
 			switch (scanner.nextInt()) {
@@ -40,6 +41,8 @@ public class MidiNumConverter {
 					System.out.println("Please input desired tempo:");
 					MidiBuilder.numToMidi(tmp, targ, scanner.next());
 					break;
+//				case 3:
+//					
 			}
 			scanner.close();
 		}
