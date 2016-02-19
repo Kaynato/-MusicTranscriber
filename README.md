@@ -1,4 +1,4 @@
-# MeuralGen
+# [MeuralGen]
 
 ### Inspiration
 - MeuralGen was first thought of as a logical extension of the famous Google Deepdream experiment, which has since grown into DeepArt and DeepStyle, which allow anyone to generate stylized art based on any image, photo, or painting. Seeing many other implementations of polyphonic generational techniques using complex methods, I wondered if it would be possible to generate convincing music through simpler means.
@@ -43,12 +43,6 @@ Navigate to the location of char-rnn-master and call sample.lua according to ins
 
 Altering the "temperature" variable may assist in producing more or less chaotic outputs.
 
-# Examples
-
-- [Default Generation with Absolute Keys]
-- [Absolute Keys Generation with Temperatures Altered]
-
    [char-rnn]: <https://github.com/karpathy/char-rnn>
    [karpathy]: <https://github.com/karpathy/char-rnn>
-   [Default Generation with Absolute Keys]: <https://github.com/Kaynato/-MusicTranscriber/tree/master/lib/absolute/default>
-   [Absolute Keys Generation with Temperatures Altered]: <https://github.com/Kaynato/-MusicTranscriber/tree/master/lib/absolute/temperature>
+   [MeuralGen] <https://dl.dropboxusercontent.com/u/26075333/%5BWorks%5D/Music/MusGen/generated.html>
