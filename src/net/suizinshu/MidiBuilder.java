@@ -99,7 +99,6 @@ public class MidiBuilder {
 		ShortMessage mm;
 		MidiEvent me;
 		
-		
 		// Create events and add in order
 		for (NoteEvent note : noteEvents) {
 

@@ -1,0 +1,257 @@
+<center>
+	<h1>
+		Generated Music in the Styles of Various Composers
+	</h1>
+	<img src="https://dl.dropboxusercontent.com/u/26075333/%5BWorks%5D/Doodles/0030_trausparent.png">
+
+<center-left>
+	<h2>
+		<br>Training data: <a href="http://piano-midi.de/">Piano-Midi.de</a>
+		<br>Machine Learning: <a href="https://github.com/karpathy/char-rnn">Karpathy char-rnn</a>
+		<br>File preparation and interpretation: <a href="https://github.com/Kaynato/-MusicTranscriber">MusicTranscriber</a>
+	</h2>
+</center-left>
+<br>
+<table border="1">
+	<tr>
+		<th>Transcription Method</th>
+		<th>Time</th>
+		<th>Pitch</th>
+		<th>Volume</th>
+		<th>Method</th>
+	</tr>
+	<tr>
+		<td>RAAD1</td>
+		<td>Relative</td>
+		<td>Absolute</td>
+		<td>Absolute</td>
+		<td>Vectorized Lines</td>
+	</tr>
+	<tr>
+		<td>RRAD1</td>
+		<td>Relative</td>
+		<td>Relative</td>
+		<td>Absolute</td>
+		<td>Vectorized Lines</td>
+	</tr>
+</table>
+
+<br>
+<br>Seeding:
+<br>	Time, Pitch, Volume, Duration
+<br>
+<table border="1">
+	<tr>
+		<th>#</th>
+		<th>Composer</th>	
+		<th>Transcription Method</th>
+		<th>Wildness</th>
+		<th>Iterations</th>
+		<th>Seed</th>
+		<th>Tempo</th>
+		<th>.mp3</th>
+	</tr>
+	<tr>
+		<td>A1</td>
+		<td>Frederic Chopin</td>
+		<td>RAAD1</td>
+		<td>100%</td>
+		<td>1000</td>
+		<td>none</td>
+		<td>160</td>
+		<td><a href="./data/out1000.mp3">X</a></td>
+	</tr>
+	<tr>
+		<td>A2</td>
+		<td>Frederic Chopin</td>
+		<td>RAAD1</td>
+		<td>100%</td>
+		<td>1500</td>
+		<td>none</td>
+		<td>160</td>
+		<td><a href="./data/out1500.mp3">X</a></td>
+	</tr>
+	<tr>
+		<td>A3</td>
+		<td>Frederic Chopin</td>
+		<td>RAAD1</td>
+		<td>100%</td>
+		<td>2300</td>
+		<td>none</td>
+		<td>160</td>
+		<td><a href="./data/out2300_t160.mp3">X</a></td>
+	</tr>
+	<tr>
+		<td>A4a</td>
+		<td>Frederic Chopin</td>
+		<td>RAAD1</td>
+		<td>100%</td>
+		<td>3300</td>
+		<td>none</td>
+		<td>160</td>
+		<td><a href="./data/out3300_t160.mp3">X</a></td>
+	</tr>
+	<tr>
+		<td>A4b</td>
+		<td>Frederic Chopin</td>
+		<td>RAAD1</td>
+		<td>100%</td>
+		<td>3300</td>
+		<td>40,40,40,180</td>
+		<td>160</td>
+		<td><a href="./data/out3300b_t202.mp3">X</a></td>
+	</tr>
+	<tr>
+		<td>A5a</td>
+		<td>Frederic Chopin</td>
+		<td>RAAD1</td>
+		<td>100%</td>
+		<td>4300</td>
+		<td>60,60,80,60</td>
+		<td>120</td>
+		<td><a href="./data/out4300a_t120.mp3">X</a></td>
+	</tr>
+	<tr>
+		<td>A5b</td>
+		<td>Frederic Chopin</td>
+		<td>RAAD1</td>
+		<td>100%</td>
+		<td>4300</td>
+		<td>40,40,40,180</td>
+		<td>160</td>
+		<td><a href="./data/out4300b_t160.mp3">X</a></td>
+	</tr>
+	<tr>
+		<td>A6a</td>
+		<td>Frederic Chopin</td>
+		<td>RAAD1</td>
+		<td>100%</td>
+		<td>10100</td>
+		<td>60,60,80,60</td>
+		<td>160</td>
+		<td><a href="./data/out10100a_t160.mp3">X</a></td>
+	</tr>
+	<tr>
+		<td>A6b</td>
+		<td>Frederic Chopin</td>
+		<td>RAAD1</td>
+		<td>100%</td>
+		<td>10100</td>
+		<td>60,40,80,240</td>
+		<td>188</td>
+		<td><a href="./data/out10100b_t188.mp3">X</a></td>
+	</tr>
+	<tr>
+		<td>A6c1</td>
+		<td>Frederic Chopin</td>
+		<td>RAAD1</td>
+		<td>100%</td>
+		<td>10100</td>
+		<td>60,52,80,120</td>
+		<td>218</td>
+		<td><a href="./data/out10100c_t218.mp3">X</a></td>
+	</tr>
+	<tr>
+		<td>A6c2</td>
+		<td>Frederic Chopin</td>
+		<td>RAAD1</td>
+		<td>100%</td>
+		<td>10100</td>
+		<td>60,52,80,120</td>
+		<td>440</td>
+		<td><a href="./data/out10100c_t440.mp3">X</a></td>
+	</tr>
+	<tr>
+		<td>B1</td>
+		<td>Frederic Chopin</td>
+		<td>RRAD1</td>
+		<td>100%</td>
+		<td>500</td>
+		<td>60,60,60,60</td>
+		<td>160</td>
+		<td><a href="./data/r500_t160.mp3">X</a></td>
+	</tr>
+	<tr>
+		<td>B2</td>
+		<td>Frederic Chopin</td>
+		<td>RRAD1</td>
+		<td>100%</td>
+		<td>1500</td>
+		<td>60,60,40,60</td>
+		<td>160</td>
+		<td><a href="./data/r1500_t160.mp3">X</a></td>
+	</tr>
+	<tr>
+		<td>T1</td>
+		<td>Frederic Chopin</td>
+		<td>RAAD1</td>
+		<td>1%</td>
+		<td>10100</td>
+		<td>60,60,40,60</td>
+		<td>160</td>
+		<td><a href="./data/A24_63_DEG0.01.mp3">X</a></td>
+	</tr>
+	<tr>
+		<td>T2</td>
+		<td>Frederic Chopin</td>
+		<td>RAAD1</td>
+		<td>20%</td>
+		<td>10100</td>
+		<td>60,60,40,20</td>
+		<td>218</td>
+		<td><a href="./data/A24_63_DEG0.2.mp3">X</a></td>
+	</tr>
+	<tr>
+		<td>T3</td>
+		<td>Frederic Chopin</td>
+		<td>RAAD1</td>
+		<td>30%</td>
+		<td>10100</td>
+		<td>60,60,40,20</td>
+		<td>240</td>
+		<td><a href="./data/A24_63_DEG0.3.mp3">X</a></td>
+	</tr>
+	<tr>
+		<td>T4</td>
+		<td>Frederic Chopin</td>
+		<td>RAAD1</td>
+		<td>40%</td>
+		<td>10100</td>
+		<td>60,60,40,20</td>
+		<td>160</td>
+		<td><a href="./data/A24_63_DEG0.4.mp3">X</a></td>
+	</tr>
+	<tr>
+		<td>T5</td>
+		<td>Frederic Chopin</td>
+		<td>RAAD1</td>
+		<td>50%</td>
+		<td>10100</td>
+		<td>60,60,40,60</td>
+		<td>440</td>
+		<td><a href="./data/A24_63_DEG0.5.mp3">X</a></td>
+	</tr>
+	<tr>
+		<td>T6a</td>
+		<td>Frederic Chopin</td>
+		<td>RAAD1</td>
+		<td>45%</td>
+		<td>10100</td>
+		<td>60,60,80,60</td>
+		<td>160</td>
+		<td><a href="./data/A24_63_20K_0.45K.mp3">X</a></td>
+	</tr>
+	<tr>
+		<td>T7b</td>
+		<td>Frederic Chopin</td>
+		<td>RAAD1</td>
+		<td>45%</td>
+		<td>10100</td>
+		<td>60,60,80,60</td>
+		<td>440</td>
+		<td><a href="./data/A24_63_20K_0.45K_t440.mp3">X</a></td>
+	</tr>
+</table>
+
+		
+</center>
